@@ -12,6 +12,7 @@ parser.add_argument("--epochs", type=int, help="epochs", required=True)
 parser.add_argument("--batch_size", type=int, help="Batch size", required=False, default=64)
 parser.add_argument('--local', action='store_true', help='Send data to wandb', required=False, default=False)
 args = parser.parse_args()
+print(args)
 
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
@@ -34,9 +35,20 @@ if __name__ == '__main__':
     
     if not args.local:
         wandb.init(project="mask-faces", config=params, name='small_cnn')
+        
+    metrics = [
+        tf.keras.metrics.TruePositives(name='tp'),
+        tf.keras.metrics.FalsePositives(name='fp'),
+        tf.keras.metrics.TrueNegatives(name='tn'),
+        tf.keras.metrics.FalseNegatives(name='fn'), 
+        tf.keras.metrics.BinaryAccuracy(name='accuracy'),
+        tf.keras.metrics.Precision(name='precision'),
+        tf.keras.metrics.Recall(name='recall'),
+        tf.keras.metrics.AUC(name='auc')
+    ]
 
     INPUT_IMG_SIZE = (160, 160) 
-    model = simple_cnn(INPUT_IMG_SIZE)
+    model = simple_cnn(INPUT_IMG_SIZE, metrics=metrics)
 
     batch_size = params['batch']
 
