@@ -95,4 +95,4 @@ if __name__ == '__main__':
             epochs=args.epochs,
             validation_data=validation_generator,
             validation_steps=validation_steps,
-            callbacks=[checkpoint, WandbCallback(data_type="image", labels=['mask', 'nomask'], generator=validation_generator)])
+            callbacks=callbacks)
