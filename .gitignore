@@ -138,3 +138,7 @@ dmypy.json
 cython_debug/
 
 **/wandb/**
+
+# weight files should be in wandb!
+*.h5
+*.hdf5
