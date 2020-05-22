@@ -23,9 +23,10 @@ for fn in all_file_names:
     try:
         nfn = uuid.uuid4().hex[:20]
         nfn += '.jpg' # are all images jpg? 
-        shutil.copy2(fn, args.output_path)
+        shutil.copy2(fn, os.path.join(args.output_path, nfn))
+        #shutil.copy2(fn, args.output_path)
     except:
-        pass
+        continue
     if n >= args.number:
         break
 
