@@ -33,7 +33,7 @@ def crop_images(source_folder, target_folder, file_path):
             subimg = img[y: y + y1, x: x + x1]
             plt.imshow(subimg)
             name = uuid.uuid4().hex[:10]
-            subimg_path = os.path.join(target_folder, f'{name}.jpg')
+            subimg_path = os.path.join(target_folder, name + '.jpg')
             im = Image.fromarray(subimg)
             im.save(subimg_path)
             print("saved", subimg_path)
