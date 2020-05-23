@@ -42,6 +42,6 @@ def crop_images(source_folder, target_folder, file_path):
 
 if __name__ == '__main__':   
     for root, dirs, files in os.walk(args.source_folder):
-        for file in files
+        for file in files:
             crop_images(args.source_folder, args.target_folder, os.path.join(root, file))
             
