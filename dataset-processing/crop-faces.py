@@ -73,7 +73,7 @@ def crop_images(source_folder, target_folder, file_path):
                 with open(label_fp, 'a') as file:
                     # File format: <object-class> <x> <y> <width> <height>
                     # Where x, y, width, and height are relative to the image's width and height.
-                    file.write(f'1 {x / img_width} {y / img_height} {width / img_width} {height / img_height}')
+                    file.write(f'1 {x / img_width} {y / img_height} {width / img_width} {height / img_height}\n')
                 
                 print('saved', label_fp)
         except Exception as ex:
