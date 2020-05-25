@@ -1,3 +1,4 @@
 [submodule "train/object-detection"]
 	path = train/object-detection
 	url = https://github.com/afcruzs/yolov3-keras-tf2.git
+	branch = masks
