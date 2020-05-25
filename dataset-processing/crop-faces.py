@@ -1,4 +1,3 @@
-from mtcnn import MTCNN
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.patches as patches
@@ -13,8 +12,29 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--source_folder", type=str, required=True)
 parser.add_argument("--target_folder", type=str, required=True)
 parser.add_argument("--mode", type=str, required=True, choices=('crop', 'bbox'))
+parser.add_argument("--detector", type=str, required=True, choices=('cv', 'mtcnn'))
 args = parser.parse_args()
-face_detector = MTCNN()
+
+if args.detector == 'mtcnn':
+    from mtcnn import MTCNN
+    face_detector = MTCNN()
+elif args.detector == 'cv':
+    import cv2
+    fname = 'haarcascade_frontalface_default.xml'
+    if not os.path.isfile(fname):
+        import urllib.request
+        print("cv model not found, downloading")
+        urllib.request.urlretrieve('https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml', filename=fname)
+        print("Done")
+
+    face_cascade = cv2.CascadeClassifier(fname)
+
+def detect_faces(img):
+    if args.detector == 'mtcnn':
+        return [x['box'] for x in face_detector.detect_faces(img)]
+    elif args.detector == 'cv':
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        return face_cascade.detectMultiScale(gray, 1.1, 4)
 
 def crop_images(source_folder, target_folder, file_path):
     try:
@@ -24,7 +44,7 @@ def crop_images(source_folder, target_folder, file_path):
         
         img_height, img_width = 1.0 * img.shape[0], 1.0 * img.shape[1]
 
-        bb = face_detector.detect_faces(img)
+        bb = detect_faces(img)
     except Exception as ex:
         print ("Error ", ex)
         return
@@ -34,7 +54,7 @@ def crop_images(source_folder, target_folder, file_path):
     
     for data in bb:
         try:
-            (x, y, width, height) = data['box']
+            (x, y, width, height) = data
             
             if args.mode == 'crop':
                 subimg = img[y: y + height, x: x + width]
