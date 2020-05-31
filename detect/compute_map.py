@@ -71,7 +71,10 @@ def compute_map_from_dataset(data_path, masks_detector, iou_threshold, max_imgs=
                 img_width, img_height = imagesize.get(os.path.join(dirpath, filename))
                 with open(os.path.join(dirpath, f'{name}.txt')) as f:
                     for line in f:
-                        object_class, x, y, width, height, = map(float, line.strip().split())
+                        data = line.strip().split()
+                        #if len(data) > 5:
+                            #print(os.path.join(dirpath, f'{name}.txt'))
+                        object_class, x, y, width, height, = map(float, data[:5])
                         object_class = int(object_class)
                         confidence = 1.0 # true pred
                         x *= img_width
