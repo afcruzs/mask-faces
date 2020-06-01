@@ -2,6 +2,7 @@ import sys
 sys.path.append('..')
 
 from .models import DLPipelineMaskDetector
+from .yolo.yolov2 import Yolov2
 from train.cnn import simple_cnn
 from mtcnn import MTCNN
 
@@ -12,5 +13,13 @@ def mtcnn_simple_cnn(network_pretrained_weights_path, object_detector_confidence
     INPUT_IMG_SIZE = (160, 160)
     network = simple_cnn(INPUT_IMG_SIZE, pretrained_weights=network_pretrained_weights_path)
     face_detector = MTCNN()
+    prepro = lambda img: img / 255.0 # Should be equivalent to test_datagen = ImageDataGenerator(rescale=1./255)?
+    return DLPipelineMaskDetector(INPUT_IMG_SIZE, network, face_detector, object_detector_confidence=object_detector_confidence)
+
+
+def yolov2_simple_cnn(network_pretrained_weights_path, yolov2_weights_path, object_detector_confidence=0.5):
+    INPUT_IMG_SIZE = (160, 160)
+    network = simple_cnn(INPUT_IMG_SIZE, pretrained_weights=network_pretrained_weights_path)
+    face_detector = Yolov2(yolov2_weights_path)
     prepro = lambda img: img / 255.0 # Should be equivalent to test_datagen = ImageDataGenerator(rescale=1./255)?
     return DLPipelineMaskDetector(INPUT_IMG_SIZE, network, face_detector, object_detector_confidence=object_detector_confidence)
